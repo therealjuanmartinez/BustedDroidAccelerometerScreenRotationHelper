@@ -1,6 +1,7 @@
 package com.example.jlock;
 
         import android.content.Context;
+        import android.hardware.Camera;
         import android.hardware.Sensor;
         import android.hardware.SensorEvent;
         import android.hardware.SensorEventListener;
@@ -218,7 +219,15 @@ public class AccelerometerManager {
             {
                 //upright
                 //listener.changeRotation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-                listener.changeRotation(ROTATION_0);
+                if (zAvg < 7) { //otherwise probably on its back
+                    listener.changeRotation(ROTATION_0);
+                }
+
+
+
+              //  Camera.Parameters parameters = camera.getParameters();
+              //  parameters.set("orientation", "portrait");
+              //  camera.setParameters(parameters);
             }
             else if (xAvg > x90Tol)
             {
@@ -235,7 +244,7 @@ public class AccelerometerManager {
 
 
 
-           // System.out.println(x + "  " + y + "  " + z +  " ***** " + xAvg + " " + zAvg + "     fdsafds");
+            //System.out.println(x + "  " + y + "  " + z +  " ***** " + xAvg + " " + zAvg + "     fdsafds");
 
 
 

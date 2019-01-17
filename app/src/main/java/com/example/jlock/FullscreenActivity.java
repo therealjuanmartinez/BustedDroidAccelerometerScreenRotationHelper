@@ -146,6 +146,8 @@ public class FullscreenActivity extends AppCompatActivity implements Acceleromet
     @Override
     public void changeRotation(int rot) {
 
+        //int i = Settings.System.getInt(getContentResolver(), Settings.System.ACCELEROMETER_ROTATION)
+
         if (getRequestedOrientation() != rot) {
 
             try{
@@ -169,7 +171,8 @@ public class FullscreenActivity extends AppCompatActivity implements Acceleromet
                     //Surface.ROTATION_0 //Or a different ROTATION_ constant
             );
 
-            setRequestedOrientation(rot);
+
+            //setRequestedOrientation(rot);
         }
     }
 
