@@ -7,12 +7,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
+
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
-public class FullscreenActivity extends AppCompatActivity {
+public class FullscreenActivity extends AppCompatActivity implements AccelerometerListener {
     /**
      * Whether or not the system UI should be auto-hidden after
      * {@link #AUTO_HIDE_DELAY_MILLIS} milliseconds.
@@ -86,7 +88,6 @@ public class FullscreenActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_fullscreen);
 
         mVisible = true;
@@ -105,8 +106,19 @@ public class FullscreenActivity extends AppCompatActivity {
         // Upon interacting with UI controls, delay any scheduled hide()
         // operations to prevent the jarring behavior of controls going away
         // while interacting with the UI.
-        findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
+
+        //findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
+
     }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (AccelerometerManager.isSupported(this) && !AccelerometerManager.isListening()) {
+            AccelerometerManager.startListening(this);
+        }
+    }
+
 
     @Override
     protected void onPostCreate(Bundle savedInstanceState) {
@@ -117,6 +129,54 @@ public class FullscreenActivity extends AppCompatActivity {
         // are available.
         delayedHide(100);
     }
+
+
+    @Override
+    public void onAccelerationChanged(float x, float y, float z) {
+
+    }
+
+    @Override
+    public void onShake(float force) {
+        Toast.makeText(this, "Motion detected", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void changeRotation(int rot) {
+
+        if (getRequestedOrientation() != rot)
+        {
+            setRequestedOrientation(rot);
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+//Check device supported Accelerometer senssor or not
+        if (AccelerometerManager.isListening()) {
+
+//Start Accelerometer Listening
+    //        AccelerometerManager.stopListening();
+
+     //       Toast.makeText(this, "onStop Accelerometer Stopped", Toast.LENGTH_SHORT).show();
+        }
+    }
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        if (AccelerometerManager.isListening()) {
+            AccelerometerManager.stopListening();
+
+            Toast.makeText(this, "onDestroy Accelerometer Stopped", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
+
+
+
 
     private void toggle() {
         if (mVisible) {
