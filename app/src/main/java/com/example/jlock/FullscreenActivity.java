@@ -1,11 +1,13 @@
 package com.example.jlock;
 
 import android.annotation.SuppressLint;
+import android.provider.Settings;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.MotionEvent;
+import android.view.Surface;
 import android.view.View;
 import android.widget.Toast;
 
@@ -138,14 +140,35 @@ public class FullscreenActivity extends AppCompatActivity implements Acceleromet
 
     @Override
     public void onShake(float force) {
-        Toast.makeText(this, "Motion detected", Toast.LENGTH_SHORT).show();
+        //Toast.makeText(this, "Motion detected", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void changeRotation(int rot) {
 
-        if (getRequestedOrientation() != rot)
-        {
+        if (getRequestedOrientation() != rot) {
+
+            try{
+                Settings.System.putInt(getContentResolver(), Settings.System.ACCELEROMETER_ROTATION, 0);
+            }
+            catch (Exception e)
+            {
+
+            }
+
+            Settings.System.putInt(
+                    getContentResolver(),
+                    Settings.System.ACCELEROMETER_ROTATION,
+                    0
+            );
+
+            Settings.System.putInt(
+                    getContentResolver(),
+                    Settings.System.USER_ROTATION,
+                    rot
+                    //Surface.ROTATION_0 //Or a different ROTATION_ constant
+            );
+
             setRequestedOrientation(rot);
         }
     }

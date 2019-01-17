@@ -13,7 +13,15 @@ package com.example.jlock;
         import android.view.View;
         import android.widget.Button;
 
+        import android.provider.Settings;
+
         import java.util.List;
+
+        import static android.view.Surface.ROTATION_0;
+        import static android.view.Surface.ROTATION_180;
+        import static android.view.Surface.ROTATION_270;
+        import static android.view.Surface.ROTATION_90;
+
 public class AccelerometerManager {
 
     private static Context context = null;
@@ -29,8 +37,8 @@ public class AccelerometerManager {
 // if you plans to use more than one listener
     private static AccelerometerListener listener;
 
-    private static float[] xArr = new float[60];
-    private static float[] zArr = new float[60];
+    private static float[] xArr = new float[30];
+    private static float[] zArr = new float[30];
 
     /**
      * indicates whether or not Accelerometer Sensor is supported
@@ -104,6 +112,9 @@ public class AccelerometerManager {
 
         sensorManager = (SensorManager) context.
                 getSystemService(Context.SENSOR_SERVICE);
+
+
+
 
 
         int i = 0;
@@ -183,7 +194,7 @@ public class AccelerometerManager {
             float zAvg = 0;
 
             int i = 0;
-            while (i < 59) {
+            while (i < 29) {
                 zArr[i] = zArr[i+1];
                 xArr[i] = xArr[i+1];
                 i++;
@@ -191,14 +202,14 @@ public class AccelerometerManager {
                 xAvg += xArr[i];
                 zAvg += zArr[i];
             }
-            xArr[59] = x;
-            zArr[59] = z;
+            xArr[29] = x;
+            zArr[29] = z;
 
-            xAvg += xArr[59];
-            zAvg += zArr[59];
+            xAvg += xArr[29];
+            zAvg += zArr[29];
 
-            xAvg = xAvg / 60;
-            zAvg = zAvg / 60;
+            xAvg = xAvg / 30;
+            zAvg = zAvg / 30;
 
             double xZeroTol = 0.6;
             double x90Tol = 8;
@@ -206,25 +217,31 @@ public class AccelerometerManager {
             if (xAvg < xZeroTol && xAvg > xZeroTol * -1)
             {
                 //upright
-                listener.changeRotation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                //listener.changeRotation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+                listener.changeRotation(ROTATION_0);
             }
             else if (xAvg > x90Tol)
             {
                 //-90
-                listener.changeRotation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                //listener.changeRotation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+                listener.changeRotation(ROTATION_90);
             }
             else if (xAvg < x90Tol * -1)
             {
-                listener.changeRotation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE);
+                //listener.changeRotation(ActivityInfo.SCREEN_ORIENTATION_REVERSE_LANDSCAPE);
+                listener.changeRotation(ROTATION_270);
                 //+90
             }
 
-            System.out.println(x + "  " + y + "  " + z +  " ***** " + xAvg + " " + zAvg + "     fdsafds");
+
+
+           // System.out.println(x + "  " + y + "  " + z +  " ***** " + xAvg + " " + zAvg + "     fdsafds");
 
 
 
 
 
+            /*
 // if not interesting in shake events
 // just remove the whole if then else block
             if (lastUpdate == 0) {
@@ -261,7 +278,7 @@ public class AccelerometerManager {
                 } else {
                     Toast.makeText(context, "No Motion detected", Toast.LENGTH_SHORT).show();
                 }
-            }
+            }*/
 // trigger change event
             listener.onAccelerationChanged(x, y, z);
         }
